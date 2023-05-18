@@ -10,13 +10,16 @@ dt = pd.read_csv("files/fish.csv", sep=",")
 
 #POPULAR MONTH
 
-count_months = dt.count()
+ccount_months = dt.count()
 count_select = count_months[['january', 'february','march','april','may','june','july','august','september','october','november','december']]
 x = ['january', 'february','march','april','may','june','july','august','september','october','november','december']
 array = np.column_stack((x, count_select))
-dt_months = pd.DataFrame(array, index=(range(1, 13)), columns=['month', 'count'])
-#dt.months['count'] = dt_months['count'].astype(float)
-#dt_months.loc[0] = count_select
+dt_months = pd.DataFrame(array, index=x, columns=['month', 'count'])
+dt_months['count'] = dt_months['count'].astype(float)
+
+dt_months.plot(kind="bar",title="popular")
+plt.ylabel("")
+plt.show()
 print(dt_months)
 print(dt_months.dtypes)
 

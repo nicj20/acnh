@@ -1,11 +1,9 @@
 import pandas as pd
-from datetime import date
 import streamlit as st
 import numpy as np
 import plotly.express as px
 import altair as alt
-
-today = date.today()
+from images import get_data
 
 dt = pd.read_csv("fish.csv", sep=",")
 
@@ -16,7 +14,7 @@ dt.drop(columns=['SH Jan', 'SH Feb', 'SH Mar', 'SH Apr', 'SH May', 'SH Jun', 'SH
                  'Unique Entry ID', 'Furniture Filename'], axis=1, inplace=True)
 dt.rename(columns={'NH Jan': 'Jan', 'NH Feb': 'Feb', 'NH Mar': 'Mar', 'NH Apr': 'Apr', 'NH May': 'May', 'NH Jun': 'Jun',
                    'NH Jul': 'Jul', 'NH Aug': 'Aug', 'NH Sep': 'Sep', 'NH Oct': 'Oct', 'NH Nov': 'Nov', 'NH Dec': 'Dec',
-                   'Where/How': 'where_how', 'Spawn Rates': 'spawn_rate'},
+                   'Where/How': 'where_how', 'Spawn Rates': 'spawn_rate', '#': 'id'},
           inplace=True)
 dt = dt.replace('4 AM – 9 PM', '4 AM – 9 PM')
 dt = dt.replace('Sea (rainy days)', 'Sea')
@@ -83,8 +81,9 @@ df_place_less = pd.DataFrame(data_place_less, index=x_places_less)
 
 min_r = dt['low_sr'].astype(float)
 max_r = dt['high_sr'].astype(float)
-dt['mean_sr'] = (min_r + max_r)/2
+dt['mean_sr'] = (min_r + max_r) / 2
 mean_r = dt['mean_sr']
+
 
 # FUNCTIONS--------------------------------------
 
@@ -96,7 +95,7 @@ def name_search(name):
         text = f'{name.title()} will be around in the {place}'
         return (text)
     except TypeError:
-        return ("Please type a valid animal")
+        return "Please type a valid animal"
 
 
 def name_date(name):
@@ -106,7 +105,17 @@ def name_date(name):
                                   'Nov', 'Dec']]
         return name
     except TypeError:
-        return ("Please type a valid animal")
+        return "Please type a valid animal"
+
+
+def id_search(id):
+    try:
+        row_index = int(dt[dt["id"] == id].index.to_numpy())
+        name_ = dt.at[dt.index[row_index], 'Name']
+        text = f'The fish you are searching for is the {name_.title()}!'
+        return [text, name_]
+    except TypeError:
+        return "Please type a valid ID"
 
 
 # WEB --------------------------------------------
@@ -116,6 +125,11 @@ st.text("In this web you will be able to manage the fishes and bugs you want to 
 st.header("Search by name where to find them")
 out_name = st.text_input(label="Please type the name ->").lower()
 st.write(name_search(out_name))
+
+try:
+    st.image(get_data(out_name))
+except KeyError:
+    st.write('')
 
 st.header("Search the schedules to find the fish")
 out_date = st.text_input(label="Please type the name of the fish ->").lower()
@@ -138,27 +152,33 @@ st.plotly_chart(figure)
 
 st.header("Most popular place")
 figure = px.bar(df_place_less, color='value', color_continuous_scale="greens")
-st.plotly_chart(figure, theme=None)
+st.plotly_chart(figure)
 
-#-----------------------------------
+# -----------------------------------
 
 figure = px.bar(df_place, color='value', color_continuous_scale="greens")
-st.plotly_chart(figure, theme=None)
+st.plotly_chart(figure)
 
-#-----------------------------------
+# -----------------------------------
 
 st.header("Range of Spawn ")
+out_id = st.number_input(label="Please type the ID you want to search ->", step=1)
+result = id_search(out_id)
+st.write(result[0])
 
-name = dt['#'].astype(int)
-df_range = {'ID':name,
-            'Min':min_r,
-            'Max':max_r}
+try:
+    st.image(get_data(result[1]))
+except KeyError:
+    st.write('')
+
+name = dt['id'].astype(int)
+df_range = {'ID': name,
+            'Min': min_r,
+            'Max': max_r}
 chart_data = pd.DataFrame(df_range)
-print(chart_data)
 
 c = alt.Chart(chart_data).mark_circle().encode(
-            x='ID', y='Min', size='Max', color=alt.Color('Max', scale=alt.
-                    Scale(scheme='darkgreen')), tooltip=['ID', 'Min', 'Max'])
+    x='ID', y='Min', size='Max', color=alt.Color('Max', scale=alt.
+                                                 Scale(scheme='darkgreen')), tooltip=['ID', 'Min', 'Max'])
 
 st.altair_chart(c, use_container_width=True, theme=None)
-

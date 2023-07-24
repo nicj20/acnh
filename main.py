@@ -43,6 +43,7 @@ dt_months['count'] = dt_months['count'].astype(float)
 
 data_pie = {'Months': x_months,
             'Count': count_select}
+
 dt_months_pie = pd.DataFrame(data_pie)
 
 # POPULAR HOUR ---------------------------------
@@ -135,11 +136,11 @@ st.header("Search the schedules to find the fish")
 out_date = st.text_input(label="Please type the name of the fish ->").lower()
 st.write(name_date(out_date))
 
+#---------------------------------------
+
 st.header("Most popular month")
 figure = px.bar(dt_months, color='value', color_continuous_scale='greens')
 st.plotly_chart(figure)
-
-# PIE-----------------------------------
 
 figure = px.pie(dt_months_pie, values='Count', names='Months', color_discrete_sequence=px.colors.sequential.Emrld)
 st.plotly_chart(figure)
@@ -150,18 +151,18 @@ st.header("Most popular hour")
 figure = px.bar(df_hour, color='value', color_continuous_scale="greens")
 st.plotly_chart(figure)
 
+#------------------------------------
+
 st.header("Most popular place")
 figure = px.bar(df_place_less, color='value', color_continuous_scale="greens")
 st.plotly_chart(figure)
-
-# -----------------------------------
 
 figure = px.bar(df_place, color='value', color_continuous_scale="greens")
 st.plotly_chart(figure)
 
 # -----------------------------------
 
-st.header("Range of Spawn ")
+st.header("Range of Spawn")
 out_id = st.number_input(label="Please type the ID you want to search ->", step=1)
 result = id_search(out_id)
 st.write(result[0])
@@ -177,8 +178,8 @@ df_range = {'ID': name,
             'Max': max_r}
 chart_data = pd.DataFrame(df_range)
 
-c = alt.Chart(chart_data).mark_circle().encode(
+figure = alt.Chart(chart_data).mark_circle().encode(
     x='ID', y='Min', size='Max', color=alt.Color('Max', scale=alt.
                                                  Scale(scheme='darkgreen')), tooltip=['ID', 'Min', 'Max'])
 
-st.altair_chart(c, use_container_width=True, theme=None)
+st.altair_chart(figure, use_container_width=True, theme=None)

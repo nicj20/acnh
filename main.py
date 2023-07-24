@@ -21,7 +21,7 @@ dt = dt.replace('Sea (rainy days)', 'Sea')
 
 # NEW COLUMNS https://www.reddit.com/r/AnimalCrossing/comments/gdl9p3/heres_a_chart_of_the_spawn_rates_of_every_fish/
 
-dt[['low_sr', 'high_sr']] = dt.spawn_rate.str.split('–', 1, expand=True)
+dt[['low_sr', 'high_sr']] = dt.spawn_rate.str.split('–', 1)
 
 # UNIQUE VALUES --------------------------------
 

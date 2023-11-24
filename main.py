@@ -121,10 +121,10 @@ def id_search(id):
 
 # WEB --------------------------------------------
 st.title("Animal Crossing New Horizons Manager (northern)")
-st.text("In this web you will be able to manage the fishes and bugs you want to catch")
+st.text("In this web you will be able to manage the fish and bugs you want to catch")
 
 st.header("Search by name where to find them")
-out_name = st.text_input(label="Please type the name ->").lower()
+out_name = st.text_input(label="Please type the name -> Example = Salmon").lower()
 st.write(name_search(out_name))
 
 try:
@@ -133,7 +133,7 @@ except KeyError:
     st.write('')
 
 st.header("Search the schedules to find the fish")
-out_date = st.text_input(label="Please type the name of the fish ->").lower()
+out_date = st.text_input(label="Please type the name of the fish -> Example = Salmon").lower()
 st.write(name_date(out_date))
 
 #---------------------------------------
@@ -163,7 +163,7 @@ st.plotly_chart(figure)
 # -----------------------------------
 
 st.header("Range of Spawn")
-out_id = st.number_input(label="Please type the ID you want to search ->", step=1)
+out_id = st.number_input(label="Please type the ID you want to search ->  Example = 25", step=1)
 result = id_search(out_id)
 st.write(result[0])
 

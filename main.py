@@ -121,7 +121,7 @@ def id_search(id):
 
 # WEB --------------------------------------------
 st.title("Animal Crossing New Horizons Manager (northern)")
-st.text("In this web you will be able to manage the fish and bugs you want to catch")
+st.text("On this web you will be able to manage the fish and bugs you want to catch")
 
 st.header("Search by name where to find them")
 out_name = st.text_input(label="Please type the name -> Example = Salmon").lower()
